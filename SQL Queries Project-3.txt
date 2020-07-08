@@ -1,0 +1,53 @@
+Query 1)Which artist have the highest number of album titles?
+
+select a.Name,count(al.Title) "Number of Title"
+FROM Artist a
+JOIN Album al
+ON al.ArtistId = a.ArtistId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5;
+
+Query 2)Who are the top 5 customers?
+
+SELECT c.Customerid, c.FirstName, c.LastName, SUM(i.Total)
+FROM Invoice i
+Join Customer c
+ON c.customerid = i.customerid
+GROUP BY c.customerid
+ORDER BY SUM(i.Total) DESC
+LIMIT 5;
+
+Query 3)Who are the top 5 Jazz artist?
+
+SELECT a.Name, SUM(t1.cnt) "Track Count"
+ FROM (SELECT al.artistid, al.albumid ,g.name , Count(t.name) as cnt
+        FROM Album al
+        JOIN track t
+        ON t.albumid = al.albumid
+        JOIN Genre g
+        ON t.genreid = g.genreid
+        WHERE g.name = "Jazz"
+        GROUP BY 2
+        ORDER by 3 DESC)t1
+ JOIN artist a
+ ON a.artistid = t1.artistid
+ GROUP BY a.artistid
+ ORDER BY sum(t1.cnt) DESC
+ LIMIT 5;
+
+Query 4)What are the top 5 most popular genres in USA?
+
+
+SELECT I.BillingCountry AS Country, G.Name AS Genre, COUNT(*) AS Total
+FROM Invoice AS I
+JOIN InvoiceLine AS IL
+  ON I.InvoiceId = IL.InvoiceId
+JOIN Track AS T
+  ON IL.TrackId = T.TrackId
+JOIN Genre AS G
+  ON T.GenreId = G.GenreId
+WHERE Country = "USA"
+GROUP BY Genre
+ORDER BY Total DESC
+LIMIT 5;
